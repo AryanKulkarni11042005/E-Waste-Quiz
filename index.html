@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Waste Management Quiz</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div id="home" class="flex-center flex-column">
+            <h1 class="title">E-Waste Management Quiz</h1>
+            <p class="subtitle">Test your knowledge about electronic waste management</p>
+            <button id="start-btn" class="btn">Start Quiz</button>
+            <button id="highscore-btn" class="btn">High Scores</button>
+        </div>
+
+        <div id="quiz-container" class="hide">
+            <div id="quiz-header">
+                <div class="hud">
+                    <div class="hud-item">
+                        <p class="hud-prefix">Question</p>
+                        <h2 id="question-counter">1/10</h2>
+                    </div>
+                    <div class="hud-item">
+                        <p class="hud-prefix">Score</p>
+                        <h2 id="score">0</h2>
+                    </div>
+                </div>
+                <div id="progress-bar">
+                    <div id="progress-fill"></div>
+                </div>
+            </div>
+            <div id="question">Question goes here</div>
+            <div id="choices" class="choice-container">
+                <!-- Choices will be inserted here by JavaScript -->
+            </div>
+            <div class="feedback-container hide" id="feedback">
+                <div id="feedback-icon"></div>
+                <p id="feedback-text"></p>
+            </div>
+        </div>
+
+        <div id="end" class="flex-center flex-column hide">
+            <h1 class="title">Quiz Completed!</h1>
+            <h2 id="final-score">0</h2>
+            <form id="username-form" class="flex-center flex-column">
+                <input type="text" name="username" id="username" placeholder="Enter your name">
+                <button type="submit" class="btn" id="save-score-btn" disabled>Save Score</button>
+            </form>
+            <div class="end-buttons">
+                <button id="play-again-btn" class="btn">Play Again</button>
+                <button id="go-home-btn" class="btn">Go Home</button>
+            </div>
+        </div>
+
+        <div id="highscores" class="flex-center flex-column hide">
+            <h1 class="title">High Scores</h1>
+            <ul id="highscore-list"></ul>
+            <div class="end-buttons">
+                <button id="clear-highscores-btn" class="btn">Clear Scores</button>
+                <button id="return-home-btn" class="btn">Go Home</button>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
