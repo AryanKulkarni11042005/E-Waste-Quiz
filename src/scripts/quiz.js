@@ -1,5 +1,6 @@
 // Import necessary files
 import riddles from './questions.js';
+import { saveScoreToDatabase, getScoresFromDatabase } from './database.js';
 
 // Initialize quiz when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -15,22 +16,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // DOM Elements
 let homeEl;
+let registrationEl;
 let quizContainerEl;
 let highscoresEl;
 let highscoreListEl;
 let endEl;
 let finalScoreEl;
 let finalTimeEl;
-let usernameEl;
-let saveScoreBtn;
 
 // Buttons
 let startBtn;
+let startQuizBtn;
+let backHomeBtn;
 let highscoreBtn;
 let playAgainBtn;
 let goHomeBtn;
 let clearHighscoresBtn;
 let returnHomeBtn;
+
+// User data
+let userData = null;
+
+// Get user data from localStorage
+function loadUserData() {
+    const storedData = localStorage.getItem('quizUserData');
+    if (storedData) {
+        userData = JSON.parse(storedData);
+        console.log('User data loaded:', userData);
+        return true;
+    }
+    console.error('No user data found in localStorage');
+    return false;
+}
 
 // Add MCQ questions to the quiz
 const mcqQuestions = [
@@ -120,6 +137,9 @@ function setupEventListeners() {
         homeEl = document.getElementById('home');
         console.log('Home element found:', !!homeEl);
         
+        registrationEl = document.getElementById('registration');
+        console.log('Registration element found:', !!registrationEl);
+        
         quizContainerEl = document.getElementById('quiz-container');
         console.log('Quiz container element found:', !!quizContainerEl);
         
@@ -135,23 +155,41 @@ function setupEventListeners() {
         startBtn = document.getElementById('start-btn');
         console.log('Start button found:', !!startBtn);
         
+        startQuizBtn = document.getElementById('start-quiz-btn');
+        backHomeBtn = document.getElementById('back-home-btn');
         highscoreBtn = document.getElementById('highscore-btn');
         playAgainBtn = document.getElementById('play-again-btn');
         goHomeBtn = document.getElementById('go-home-btn');
         clearHighscoresBtn = document.getElementById('clear-highscores-btn');
         returnHomeBtn = document.getElementById('return-home-btn');
 
-        // Add Event Listeners with direct callback for debugging
-        console.log('Adding event listener to start button');
+        // Add Event Listeners
         if (startBtn) {
             startBtn.onclick = function() {
-                console.log('Start button clicked!');
-                startMixedQuiz();
+                console.log('Start button clicked! Showing registration form');
+                showRegistration();
+            };
+        }
+        
+        // Registration form submission
+        const registrationForm = document.getElementById('registration-form');
+        if (registrationForm) {
+            registrationForm.onsubmit = function(e) {
+                e.preventDefault();
+                handleRegistrationSubmit();
+            };
+        }
+        
+        // Back button on registration
+        if (backHomeBtn) {
+            backHomeBtn.onclick = function() {
+                hideAllSections();
+                homeEl.classList.remove('hide');
             };
         }
         
         if (highscoreBtn) highscoreBtn.onclick = showHighscores;
-        if (playAgainBtn) playAgainBtn.onclick = startMixedQuiz;
+        if (playAgainBtn) playAgainBtn.onclick = showRegistration; // Show registration instead of directly starting
         if (goHomeBtn) goHomeBtn.onclick = goHome;
         if (clearHighscoresBtn) clearHighscoresBtn.onclick = clearHighscores;
         if (returnHomeBtn) returnHomeBtn.onclick = goHome;
@@ -159,6 +197,41 @@ function setupEventListeners() {
         console.log('Event listeners set up successfully');
     } catch (error) {
         console.error('Error setting up event listeners:', error);
+    }
+}
+
+// Show registration form
+function showRegistration() {
+    console.log('Showing registration form');
+    hideAllSections();
+    registrationEl.classList.remove('hide');
+}
+
+// Handle registration form submission
+function handleRegistrationSubmit() {
+    console.log('Registration form submitted');
+    
+    const rollnoInput = document.getElementById('reg-rollno');
+    const nameInput = document.getElementById('reg-name');
+    
+    if (rollnoInput && nameInput) {
+        const rollno = rollnoInput.value.trim();
+        const name = nameInput.value.trim();
+        
+        if (rollno && name) {
+            // Store user data
+            userData = { rollno, name };
+            localStorage.setItem('quizUserData', JSON.stringify(userData));
+            
+            console.log('User registered:', userData);
+            
+            // Start the quiz
+            startMixedQuiz();
+        } else {
+            alert('Please enter both your roll number and name.');
+        }
+    } else {
+        console.error('Could not find registration form inputs');
     }
 }
 
@@ -311,16 +384,16 @@ function displayMCQ(mcq) {
             <div id="quiz-header">
                 <div class="hud">
                     <div class="hud-item">
-                        <p class="hud-prefix">Question</p>
-                        <h2 id="question-counter">${currentQuestionIndex + 1}/${questionSequence.length}</h2>
+                    <p class="hud-prefix">Question</p>
+                    <h2 id="question-counter">${currentQuestionIndex + 1}/${questionSequence.length}</h2>
                     </div>
                     <div class="hud-item">
-                        <p class="hud-prefix">Score</p>
-                        <h2 id="score">${score}</h2>
+                    <p class="hud-prefix">Score</p>
+                    <h2 id="score">${score}</h2>
                     </div>
                     <div class="hud-item">
-                        <p class="hud-prefix">Time</p>
-                        <h2 id="timer">00:00</h2>
+                    <p class="hud-prefix">Time</p>
+                    <h2 id="timer">00:00</h2>
                     </div>
                 </div>
                 <div id="progress-bar">
@@ -457,7 +530,7 @@ function moveToNextQuestion(pointsAwarded) {
     }
 }
 
-// End the quiz
+// End the quiz and save score automatically
 function endQuiz() {
     try {
         // Stop the timer
@@ -468,21 +541,50 @@ function endQuiz() {
         
         if (finalScoreEl) finalScoreEl.innerText = score;
         if (finalTimeEl) finalTimeEl.innerText = formatTime(totalTime);
+        
+        // Automatically save the score with the pre-registered user data
+        saveScore();
     } catch (error) {
         console.error('Error ending quiz:', error);
     }
 }
 
+// Save score automatically using pre-registered data
+async function saveScore() {
+    try {
+        // Create score object
+        const scoreData = {
+            name: userData.name,
+            rollno: userData.rollno,
+            score: score,
+            timeInSeconds: quizDuration,
+            timeFormatted: formatTime(quizDuration),
+            date: new Date().toISOString()
+        };
+        
+        console.log('Saving score:', scoreData);
+        
+        // Save to database
+        await saveScoreToDatabase(scoreData);
+        console.log('Score saved successfully');
+        
+    } catch (error) {
+        console.error('Error saving score:', error);
+    }
+}
+
 // Hide all sections
 function hideAllSections() {
-    try {
-        homeEl.classList.add('hide');
-        quizContainerEl.classList.add('hide');
-        if (endEl) endEl.classList.add('hide');
-        if (highscoresEl) highscoresEl.classList.add('hide');
-    } catch (error) {
-        console.error('Error hiding sections:', error);
-    }
+  try {
+    // Use optional chaining to prevent errors if elements don't exist
+    document.getElementById('home')?.classList.add('hide');
+    document.getElementById('registration')?.classList.add('hide');
+    document.getElementById('quiz-container')?.classList.add('hide');
+    document.getElementById('end')?.classList.add('hide');
+    document.getElementById('highscores')?.classList.add('hide');
+  } catch (error) {
+    console.error('Error hiding sections:', error);
+  }
 }
 
 // Go to home screen
@@ -501,30 +603,32 @@ function showHighscores() {
         hideAllSections();
         highscoresEl.classList.remove('hide');
         
-        // Get high scores from localStorage
-        const highScores = JSON.parse(localStorage.getItem('highScores')) || [];
-        
-        // Clear previous list
-        highscoreListEl.innerHTML = '';
-        
-        // Create high score items
-        highScores.forEach((score, index) => {
-            const li = document.createElement('li');
-            li.classList.add('highscore-item');
-            li.innerHTML = `
-                <span class="highscore-name">${score.name}</span>
-                <span class="highscore-score">${score.score}</span>
-            `;
-            highscoreListEl.appendChild(li);
+        // Get high scores from database
+        getScoresFromDatabase().then(highScores => {
+            // Clear previous list
+            highscoreListEl.innerHTML = '';
+            
+            // Create high score items
+            highScores.forEach((score, index) => {
+                const li = document.createElement('li');
+                li.classList.add('highscore-item');
+                li.innerHTML = `
+                    <span class="highscore-name">${score.name}</span>
+                    <span class="highscore-score">${score.score}</span>
+                `;
+                highscoreListEl.appendChild(li);
+            });
+            
+            // Show message if no scores
+            if (highScores.length === 0) {
+                const li = document.createElement('li');
+                li.classList.add('highscore-item');
+                li.innerText = 'No high scores yet!';
+                highscoreListEl.appendChild(li);
+            }
+        }).catch(error => {
+            console.error('Error fetching highscores:', error);
         });
-        
-        // Show message if no scores
-        if (highScores.length === 0) {
-            const li = document.createElement('li');
-            li.classList.add('highscore-item');
-            li.innerText = 'No high scores yet!';
-            highscoreListEl.appendChild(li);
-        }
     } catch (error) {
         console.error('Error showing highscores:', error);
     }
@@ -541,4 +645,4 @@ function clearHighscores() {
 }
 
 // Export functions for use in other files
-export { startMixedQuiz, showHighscores };
+export { startMixedQuiz, showHighscores, showRegistration };

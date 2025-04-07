@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,14 +7,28 @@
     <title>E-Waste Riddles Challenge</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/style.css">
 </head>
 <body>
     <div class="container">
+        <!-- Home section - THIS WAS MISSING -->
         <div id="home" class="flex-center flex-column">
             <h1 class="title">E-Waste Riddles Challenge</h1>
             <p class="subtitle">Test your knowledge with fun e-waste riddles!</p>
             <button id="start-btn" class="btn">Start Challenge</button>
             <button id="highscore-btn" class="btn">High Scores</button>
+        </div>
+        
+        <!-- Registration section -->
+        <div id="registration" class="flex-center flex-column hide">
+            <h1 class="title">Register</h1>
+            <p class="subtitle">Please enter your details to start the quiz</p>
+            <form id="registration-form" class="flex-center flex-column">
+                <input type="text" name="rollno" id="reg-rollno" placeholder="Enter your Roll No (e.g. 23102B0072)" required>
+                <input type="text" name="name" id="reg-name" placeholder="Enter your name" required>
+                <button type="submit" class="btn" id="start-quiz-btn">Start Quiz</button>
+            </form>
+            <button id="back-home-btn" class="btn btn-secondary mt-20">Back</button>
         </div>
 
         <div id="quiz-container" class="hide">
@@ -32,10 +47,6 @@
                     <h2 id="final-time">00:00</h2>
                 </div>
             </div>
-            <form id="username-form" class="flex-center flex-column">
-                <input type="text" name="username" id="username" placeholder="Enter your name">
-                <button type="submit" class="btn" id="save-score-btn" disabled>Save Score</button>
-            </form>
             <div class="end-buttons">
                 <button id="play-again-btn" class="btn">Play Again</button>
                 <button id="go-home-btn" class="btn">Go Home</button>
@@ -54,6 +65,5 @@
     
     <!-- Scripts -->
     <script type="module" src="/src/main.js"></script>
-    <script type="module" src="/src/scripts/diagnostic.js"></script>
 </body>
 </html>
