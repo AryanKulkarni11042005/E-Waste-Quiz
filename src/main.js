@@ -1,18 +1,33 @@
 // Import styles
 import './style.css';
 
-// Import scripts
-import './scripts/quiz.js';
+// Direct import
+import * as quiz from './scripts/quiz.js';
 
 // Log application start
-console.log('E-waste Quiz Application Loaded');
+console.log('E-waste Riddles Challenge Loaded');
 
 // Add any global configurations or initializations here
 document.addEventListener('DOMContentLoaded', () => {
   // This will run after the DOM is fully loaded
-  console.log('DOM fully loaded and parsed');
+  console.log('DOM fully loaded and parsed from main.js');
   
-  // You could add any global event listeners here if needed
+  // Directly add event listener to start button as a backup
+  const startBtn = document.getElementById('start-btn');
+  if (startBtn) {
+    console.log('Adding backup event listener to start button');
+    startBtn.addEventListener('click', () => {
+      console.log('Start button clicked in main.js');
+      if (typeof quiz.startMixedQuiz === 'function') {
+        console.log('Calling startMixedQuiz from main.js');
+        quiz.startMixedQuiz();
+      } else {
+        console.error('startMixedQuiz function not found');
+      }
+    });
+  } else {
+    console.error('Start button not found in main.js');
+  }
   
   // Add a simple loading indicator that disappears when the app is ready
   const body = document.querySelector('body');

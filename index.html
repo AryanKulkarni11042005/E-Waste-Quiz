@@ -3,48 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Waste Management Quiz</title>
+    <title>E-Waste Riddles Challenge</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <div id="home" class="flex-center flex-column">
-            <h1 class="title">E-Waste Management Quiz</h1>
-            <p class="subtitle">Test your knowledge about electronic waste management</p>
-            <button id="start-btn" class="btn">Start Quiz</button>
+            <h1 class="title">E-Waste Riddles Challenge</h1>
+            <p class="subtitle">Test your knowledge with fun e-waste riddles!</p>
+            <button id="start-btn" class="btn">Start Challenge</button>
             <button id="highscore-btn" class="btn">High Scores</button>
         </div>
 
         <div id="quiz-container" class="hide">
-            <div id="quiz-header">
-                <div class="hud">
-                    <div class="hud-item">
-                        <p class="hud-prefix">Question</p>
-                        <h2 id="question-counter">1/10</h2>
-                    </div>
-                    <div class="hud-item">
-                        <p class="hud-prefix">Score</p>
-                        <h2 id="score">0</h2>
-                    </div>
-                </div>
-                <div id="progress-bar">
-                    <div id="progress-fill"></div>
-                </div>
-            </div>
-            <div id="question">Question goes here</div>
-            <div id="choices" class="choice-container">
-                <!-- Choices will be inserted here by JavaScript -->
-            </div>
-            <div class="feedback-container hide" id="feedback">
-                <div id="feedback-icon"></div>
-                <p id="feedback-text"></p>
-            </div>
+            <!-- Riddle content will be inserted here by JavaScript -->
         </div>
 
         <div id="end" class="flex-center flex-column hide">
-            <h1 class="title">Quiz Completed!</h1>
-            <h2 id="final-score">0</h2>
+            <h1 class="title">Challenge Completed!</h1>
+            <div class="results">
+                <div class="result-item">
+                    <p>Your Score:</p>
+                    <h2 id="final-score">0</h2>
+                </div>
+                <div class="result-item">
+                    <p>Your Time:</p>
+                    <h2 id="final-time">00:00</h2>
+                </div>
+            </div>
             <form id="username-form" class="flex-center flex-column">
                 <input type="text" name="username" id="username" placeholder="Enter your name">
                 <button type="submit" class="btn" id="save-score-btn" disabled>Save Score</button>
@@ -65,6 +52,8 @@
         </div>
     </div>
     
+    <!-- Scripts -->
     <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/scripts/diagnostic.js"></script>
 </body>
 </html>

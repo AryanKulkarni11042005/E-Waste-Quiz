@@ -10,5 +10,9 @@
   },
   "devDependencies": {
     "vite": "^6.2.4"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "mongodb": "^6.15.0"
   }
 }

@@ -133,4 +133,44 @@ const questions = [
     }
 ];
 
-export default questions;
+
+// E-waste riddles for the quiz
+const riddles = [
+    {
+        question: "I once gave power, now I'm flat,<br>Toss me right—don't squash me flat!<br>What am I?",
+        answer: "battery",
+        hint: "You use me in remotes and many portable devices."
+    },
+    {
+        question: "Old and cracked, I've lost my zing,<br>Don't trash me—I'm a recycling thing!<br>What am I?",
+        answer: "mobile",
+        hint: "You use me to call and text people."
+    },
+    {
+        question: "I'm not a book, but I have pages,<br>Toss me right, not in cages.<br>What am I?",
+        answer: "laptop",
+        hint: "I'm portable and have a keyboard."
+    },
+    {
+        question: "Ink is gone, my job is done,<br>But in e-waste, I still belong!<br>What am I?",
+        answer: "printer",
+        hint: "I put your digital documents on paper."
+    },
+    {
+        question: "I cool your food both day and night,<br>Don't dump me—recycle me right!<br>What am I?",
+        answer: "fridge",
+        hint: "I keep your food cold and fresh."
+    },
+    {
+        question: "I help you click, I help you scroll,<br>But in the trash? That's not my goal!<br>What am I?",
+        answer: "mouse",
+        hint: "You move me on your desk to navigate your computer."
+    },
+    {
+        question: "Music's my thing, I play it loud,<br>But recycle me—I'd be proud!<br>What am I?",
+        answer: "headphones",
+        hint: "I sit on your ears to let you listen privately."
+    }
+];
+
+export default riddles;
